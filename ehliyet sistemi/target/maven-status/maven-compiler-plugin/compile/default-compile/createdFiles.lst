@@ -1,0 +1,6 @@
+com\ehliyet\controllers\StudentDashboardController.class
+com\ehliyet\database\DatabaseConnection.class
+com\ehliyet\controllers\AdminDashboardController.class
+com\ehliyet\controllers\LoginController.class
+com\ehliyet\models\User.class
+com\ehliyet\Main.class

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.ehliyet.controllers.StudentDashboardController">
+
+    <top>
+        <VBox style="-fx-background-color: #4CAF50; -fx-padding: 20;">
+            <Label fx:id="welcomeLabel" text="Hoş Geldin Öğrenci!" style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+            <Label text="Öğrenci Paneli" style="-fx-text-fill: white; -fx-font-size: 14px;"/>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox alignment="CENTER" spacing="20">
+            <Label text="🎓 Öğrenci Paneli Hazırlanıyor..." style="-fx-font-size: 20px;"/>
+            <Label text="Sonraki adımlarda tamamlanacak" style="-fx-text-fill: #666;"/>
+        </VBox>
+    </center>
+
+</BorderPane>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.ehliyet.controllers.LoginController"
+            style="-fx-background-color: #f5f5f5;">
+
+    <center>
+        <VBox alignment="CENTER" spacing="20" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);" maxWidth="400" maxHeight="500">
+            <padding>
+                <Insets top="40" right="40" bottom="40" left="40"/>
+            </padding>
+
+            <!-- Başlık -->
+            <Label text="🎓 Ehliyet Sınav Sistemi" style="-fx-text-fill: #2196F3; -fx-font-weight: bold;">
+                <font>
+                    <Font size="24"/>
+                </font>
+            </Label>
+
+            <Label text="Giriş Yapın" style="-fx-text-fill: #666; -fx-font-size: 14px;"/>
+
+            <Separator prefWidth="300"/>
+
+            <!-- Kullanıcı Adı -->
+            <VBox spacing="5" alignment="CENTER_LEFT">
+                <Label text="Kullanıcı Adı:" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="usernameField" promptText="Kullanıcı adınızı girin" prefWidth="320" style="-fx-font-size: 14px; -fx-padding: 10;"/>
+            </VBox>
+
+            <!-- Şifre -->
+            <VBox spacing="5" alignment="CENTER_LEFT">
+                <Label text="Şifre:" style="-fx-font-weight: bold;"/>
+                <PasswordField fx:id="passwordField" promptText="Şifrenizi girin" prefWidth="320" style="-fx-font-size: 14px; -fx-padding: 10;"/>
+            </VBox>
+
+            <!-- Giriş Tipi -->
+            <VBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Giriş Tipi:" style="-fx-font-weight: bold;"/>
+                <HBox spacing="20">
+                    <RadioButton fx:id="studentRadio" text="Öğrenci" style="-fx-font-size: 14px;"/>
+                    <RadioButton fx:id="adminRadio" text="Yönetici" style="-fx-font-size: 14px;"/>
+                </HBox>
+            </VBox>
+
+            <!-- Giriş Butonu -->
+            <Button fx:id="loginButton" text="Giriş Yap" onAction="#handleLogin" prefWidth="320" prefHeight="40" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-cursor: hand;"/>
+
+            <!-- Hata Mesajı -->
+            <Label fx:id="messageLabel" style="-fx-text-fill: red; -fx-font-size: 12px;" wrapText="true" maxWidth="320"/>
+
+            <Separator prefWidth="300"/>
+
+            <!-- Bilgi -->
+            <Label text="ℹ️ Not: Hesap oluşturmak için kuruma başvurun" style="-fx-text-fill: #999; -fx-font-size: 11px;" wrapText="true" maxWidth="320" textAlignment="CENTER"/>
+
+        </VBox>
+    </center>
+
+</BorderPane>
