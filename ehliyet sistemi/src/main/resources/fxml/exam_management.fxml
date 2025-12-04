@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+        <?import javafx.geometry.Insets?>
+        <?import javafx.scene.control.*?>
+        <?import javafx.scene.layout.*?>
+        <?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.ehliyet.controllers.ExamManagementController"
+      spacing="20" styleClass="exam-management">
+
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="20">
+        <Label text="📝 Sınav Yönetimi" styleClass="page-title">
+            <font>
+                <Font name="System Bold" size="24"/>
+            </font>
+        </Label>
+
+        <Region HBox.hgrow="ALWAYS"/>
+
+        <Button text="➕ Yeni Sınav Oluştur" onAction="#showCreateExamDialog"
+                styleClass="primary-btn">
+            <font>
+                <Font size="13"/>
+            </font>
+        </Button>
+    </HBox>
+
+    <Separator/>
+
+    <!-- Filter and Search -->
+    <HBox spacing="15" alignment="CENTER_LEFT" styleClass="filter-section">
+        <padding>
+            <Insets top="10" right="10" bottom="10" left="10"/>
+        </padding>
+
+        <Label text="Filtrele:">
+            <font>
+                <Font name="System Bold" size="13"/>
+            </font>
+        </Label>
+
+        <ComboBox fx:id="statusFilterCombo" promptText="Durum Seç"
+                  onAction="#applyFilters" prefWidth="150">
+        </ComboBox>
+
+        <TextField fx:id="searchField" promptText="🔍 Sınav adı ara..."
+                   prefWidth="250" onKeyReleased="#applyFilters">
+        </TextField>
+
+        <Button text="🔄 Yenile" onAction="#refreshTable" styleClass="refresh-btn">
+            <font>
+                <Font size="12"/>
+            </font>
+        </Button>
+
+        <Region HBox.hgrow="ALWAYS"/>
+
+        <Label fx:id="totalExamsLabel" text="Toplam: 0 sınav" styleClass="info-label">
+            <font>
+                <Font size="13"/>
+            </font>
+        </Label>
+    </HBox>
+
+    <!-- Exams Table -->
+    <TableView fx:id="examsTable" VBox.vgrow="ALWAYS" styleClass="exams-table">
+        <columns>
+            <TableColumn fx:id="idCol" text="ID" prefWidth="50"/>
+            <TableColumn fx:id="examCodeCol" text="Sınav Kodu" prefWidth="120"/>
+            <TableColumn fx:id="examNameCol" text="Sınav Adı" prefWidth="250"/>
+            <TableColumn fx:id="totalQuestionsCol" text="Soru Sayısı" prefWidth="100"/>
+            <TableColumn fx:id="durationCol" text="Süre (dk)" prefWidth="100"/>
+            <TableColumn fx:id="passingScoreCol" text="Geçme Puanı" prefWidth="120"/>
+            <TableColumn fx:id="startDateCol" text="Başlangıç" prefWidth="150"/>
+            <TableColumn fx:id="endDateCol" text="Bitiş" prefWidth="150"/>
+            <TableColumn fx:id="statusCol" text="Durum" prefWidth="100"/>
+            <TableColumn fx:id="actionsCol" text="İşlemler" prefWidth="250"/>
+        </columns>
+    </TableView>
+
+    <!-- Statistics -->
+    <HBox spacing="20" alignment="CENTER" styleClass="stats-section">
+        <padding>
+            <Insets top="15" right="10" bottom="10" left="10"/>
+        </padding>
+
+        <VBox alignment="CENTER" spacing="5" styleClass="stat-box">
+            <Label text="Aktif Sınavlar" styleClass="stat-label">
+                <font>
+                    <Font size="11"/>
+                </font>
+            </Label>
+            <Label fx:id="activeExamsCount" text="0" styleClass="stat-value">
+                <font>
+                    <Font name="System Bold" size="16"/>
+                </font>
+            </Label>
+        </VBox>
+
+        <VBox alignment="CENTER" spacing="5" styleClass="stat-box">
+            <Label text="Planlanan" styleClass="stat-label">
+                <font>
+                    <Font size="11"/>
+                </font>
+            </Label>
+            <Label fx:id="scheduledExamsCount" text="0" styleClass="stat-value">
+                <font>
+                    <Font name="System Bold" size="16"/>
+                </font>
+            </Label>
+        </VBox>
+
+        <VBox alignment="CENTER" spacing="5" styleClass="stat-box">
+            <Label text="Tamamlanan" styleClass="stat-label">
+                <font>
+                    <Font size="11"/>
+                </font>
+            </Label>
+            <Label fx:id="completedExamsCount" text="0" styleClass="stat-value">
+                <font>
+                    <Font name="System Bold" size="16"/>
+                </font>
+            </Label>
+        </VBox>
+
+        <VBox alignment="CENTER" spacing="5" styleClass="stat-box">
+            <Label text="Ortalama Başarı" styleClass="stat-label">
+                <font>
+                    <Font size="11"/>
+                </font>
+            </Label>
+            <Label fx:id="averageSuccessRate" text="0%" styleClass="stat-value">
+                <font>
+                    <Font name="System Bold" size="16"/>
+                </font>
+            </Label>
+        </VBox>
+    </HBox>
+
+</VBox>
