@@ -135,7 +135,8 @@ public class User {
         return "admin".equals(userType);
     }
 
-    public String toStradminadmining() {
+    @Override
+    public String toString() {
         return "User{" +
                 "id=" + id +
                 ", username='" + username + '\'' +

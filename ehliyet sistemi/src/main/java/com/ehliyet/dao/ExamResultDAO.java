@@ -15,7 +15,7 @@ public class ExamResultDAO {
      * Yeni sınav sonucu başlatır
      */
     public boolean startExam(ExamResult result) {
-        String sql = "INSERT INTO exam_results (exam_id, student_id, start_time, status) " +
+        String sql = "INSERT INTO exam_attempts (exam_id, student_id, start_time, status) " +
                 "VALUES (?, ?, ?, 'in_progress')";
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -47,7 +47,7 @@ public class ExamResultDAO {
      * Sınavı tamamlar ve sonucu kaydeder
      */
     public boolean completeExam(ExamResult result) {
-        String sql = "UPDATE exam_results SET end_time=?, score=?, correct_answers=?, " +
+        String sql = "UPDATE exam_attempts SET end_time=?, score=?, correct_answers=?, " +
                 "wrong_answers=?, empty_answers=?, status='completed' WHERE id=?";
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -77,15 +77,15 @@ public class ExamResultDAO {
     /**
      * Öğrenci cevabını kaydeder
      */
-    public boolean saveStudentAnswer(int resultId, int questionId, String answer, boolean isCorrect) {
-        String sql = "INSERT INTO student_answers (result_id, question_id, student_answer, is_correct) " +
+    public boolean saveStudentAnswer(int attemptId, int questionId, String answer, boolean isCorrect) {
+        String sql = "INSERT INTO exam_answers (attempt_id, question_id, student_answer, is_correct) " +
                 "VALUES (?, ?, ?, ?) " +
                 "ON DUPLICATE KEY UPDATE student_answer=?, is_correct=?, answered_at=NOW()";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setInt(1, resultId);
+            stmt.setInt(1, attemptId);
             stmt.setInt(2, questionId);
             stmt.setString(3, answer);
             stmt.setBoolean(4, isCorrect);
@@ -105,11 +105,11 @@ public class ExamResultDAO {
     /**
      * Öğrencinin cevaplarını getirir
      */
-    public List<StudentAnswer> getStudentAnswers(int resultId) {
+    public List<StudentAnswer> getStudentAnswers(int attemptId) {
         String sql = "SELECT sa.*, q.correct_answer, q.question_text " +
-                "FROM student_answers sa " +
+                "FROM exam_answers sa " +
                 "INNER JOIN questions q ON sa.question_id = q.id " +
-                "WHERE sa.result_id = ? " +
+                "WHERE sa.attempt_id = ? " +
                 "ORDER BY sa.id";
 
         List<StudentAnswer> answers = new ArrayList<>();
@@ -117,13 +117,13 @@ public class ExamResultDAO {
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setInt(1, resultId);
+            stmt.setInt(1, attemptId);
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
                 StudentAnswer answer = new StudentAnswer();
                 answer.setId(rs.getInt("id"));
-                answer.setResultId(rs.getInt("result_id"));
+                answer.setResultId(rs.getInt("attempt_id"));
                 answer.setQuestionId(rs.getInt("question_id"));
                 answer.setStudentAnswer(rs.getString("student_answer"));
                 answer.setCorrect(rs.getBoolean("is_correct"));
@@ -151,7 +151,7 @@ public class ExamResultDAO {
     public ExamResult getResultById(int id) {
         String sql = "SELECT er.*, e.exam_name, e.exam_code, e.passing_score, " +
                 "u.username, u.full_name, u.student_no " +
-                "FROM exam_results er " +
+                "FROM exam_attempts er " +
                 "INNER JOIN exams e ON er.exam_id = e.id " +
                 "INNER JOIN users u ON er.student_id = u.id " +
                 "WHERE er.id = ?";
@@ -179,11 +179,11 @@ public class ExamResultDAO {
     public List<ExamResult> getResultsByStudentId(int studentId) {
         String sql = "SELECT er.*, e.exam_name, e.exam_code, e.passing_score, " +
                 "u.username, u.full_name, u.student_no " +
-                "FROM exam_results er " +
+                "FROM exam_attempts er " +
                 "INNER JOIN exams e ON er.exam_id = e.id " +
                 "INNER JOIN users u ON er.student_id = u.id " +
                 "WHERE er.student_id = ? " +
-                "ORDER BY er.created_date DESC";
+                "ORDER BY er.created_at DESC";
 
         return getResults(sql, studentId);
     }
@@ -194,11 +194,11 @@ public class ExamResultDAO {
     public List<ExamResult> getResultsByStudentAndExam(int studentId, int examId) {
         String sql = "SELECT er.*, e.exam_name, e.exam_code, e.passing_score, " +
                 "u.username, u.full_name, u.student_no " +
-                "FROM exam_results er " +
+                "FROM exam_attempts er " +
                 "INNER JOIN exams e ON er.exam_id = e.id " +
                 "INNER JOIN users u ON er.student_id = u.id " +
                 "WHERE er.student_id = ? AND er.exam_id = ? " +
-                "ORDER BY er.created_date DESC";
+                "ORDER BY er.created_at DESC";
 
         List<ExamResult> results = new ArrayList<>();
 
@@ -226,11 +226,11 @@ public class ExamResultDAO {
     public List<ExamResult> getResultsByExamId(int examId) {
         String sql = "SELECT er.*, e.exam_name, e.exam_code, e.passing_score, " +
                 "u.username, u.full_name, u.student_no " +
-                "FROM exam_results er " +
+                "FROM exam_attempts er " +
                 "INNER JOIN exams e ON er.exam_id = e.id " +
                 "INNER JOIN users u ON er.student_id = u.id " +
                 "WHERE er.exam_id = ? " +
-                "ORDER BY er.score DESC, er.created_date DESC";
+                "ORDER BY er.score DESC, er.created_at DESC";
 
         return getResults(sql, examId);
     }
@@ -241,7 +241,7 @@ public class ExamResultDAO {
     public ExamResult getInProgressExam(int studentId) {
         String sql = "SELECT er.*, e.exam_name, e.exam_code, e.passing_score, " +
                 "u.username, u.full_name, u.student_no " +
-                "FROM exam_results er " +
+                "FROM exam_attempts er " +
                 "INNER JOIN exams e ON er.exam_id = e.id " +
                 "INNER JOIN users u ON er.student_id = u.id " +
                 "WHERE er.student_id = ? AND er.status = 'in_progress' " +
@@ -268,7 +268,7 @@ public class ExamResultDAO {
      * Fotoğraf yolu günceller
      */
     public boolean updatePhotoPath(int resultId, String photoPath) {
-        String sql = "UPDATE exam_results SET photo_path=? WHERE id=?";
+        String sql = "UPDATE exam_attempts SET photo_path=? WHERE id=?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -290,7 +290,7 @@ public class ExamResultDAO {
      * Sınav istatistikleri - Ortalama puan
      */
     public double getAverageScoreByExam(int examId) {
-        String sql = "SELECT AVG(score) as avg_score FROM exam_results " +
+        String sql = "SELECT AVG(score) as avg_score FROM exam_attempts " +
                 "WHERE exam_id=? AND status='completed'";
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -317,7 +317,7 @@ public class ExamResultDAO {
         String sql = "SELECT " +
                 "COUNT(*) as total, " +
                 "SUM(CASE WHEN score >= (SELECT passing_score FROM exams WHERE id=?) THEN 1 ELSE 0 END) as passed " +
-                "FROM exam_results WHERE exam_id=? AND status='completed'";
+                "FROM exam_attempts WHERE exam_id=? AND status='completed'";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -390,7 +390,7 @@ public class ExamResultDAO {
         result.setStatus(rs.getString("status"));
         result.setPhotoPath(rs.getString("photo_path"));
 
-        Timestamp createdTimestamp = rs.getTimestamp("created_date");
+        Timestamp createdTimestamp = rs.getTimestamp("created_at");
         if (createdTimestamp != null) {
             result.setCreatedDate(createdTimestamp.toLocalDateTime());
         }

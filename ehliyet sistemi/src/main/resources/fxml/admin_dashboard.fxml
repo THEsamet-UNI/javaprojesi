@@ -7,20 +7,183 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.ehliyet.controllers.AdminDashboardController">
+            fx:controller="com.ehliyet.controllers.AdminDashboardController"
+            style="-fx-background-color: #f5f5f5;">
 
     <top>
-        <VBox style="-fx-background-color: #2196F3; -fx-padding: 20;">
-            <Label fx:id="welcomeLabel" text="Hoş Geldin Admin!" style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"/>
-            <Label text="Yönetici Paneli" style="-fx-text-fill: white; -fx-font-size: 14px;"/>
+        <VBox>
+            <!-- Header -->
+            <HBox style="-fx-background-color: #2196F3; -fx-padding: 15;" alignment="CENTER_LEFT" spacing="20">
+                <Label text="🎓 Ehliyet Sınav Sistemi - Admin Paneli" style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="welcomeLabel" text="Hoş Geldin Admin!" style="-fx-text-fill: white; -fx-font-size: 14px;"/>
+                <Button fx:id="logoutButton" text="🚪 Çıkış" onAction="#handleLogout" 
+                        style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-cursor: hand;"/>
+            </HBox>
         </VBox>
     </top>
 
     <center>
-        <VBox alignment="CENTER" spacing="20">
-            <Label text="🎉 Admin Paneli Hazırlanıyor..." style="-fx-font-size: 20px;"/>
-            <Label text="Sonraki adımlarda tamamlanacak" style="-fx-text-fill: #666;"/>
-        </VBox>
+        <TabPane fx:id="mainTabPane" tabClosingPolicy="UNAVAILABLE" style="-fx-padding: 10;">
+            
+            <!-- Dashboard Tab -->
+            <Tab text="📊 Özet Panel">
+                <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
+                    <VBox spacing="20" style="-fx-padding: 20;">
+                        <!-- Statistics Cards -->
+                        <Label text="📈 Sistem İstatistikleri" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                        <HBox spacing="20" alignment="CENTER">
+                            <!-- Total Students -->
+                            <VBox alignment="CENTER" spacing="10" style="-fx-background-color: #3498db; -fx-background-radius: 10; -fx-padding: 20; -fx-min-width: 180;">
+                                <Label text="👥" style="-fx-font-size: 30px;"/>
+                                <Label fx:id="totalStudentsLabel" text="0" style="-fx-text-fill: white; -fx-font-size: 28px; -fx-font-weight: bold;"/>
+                                <Label text="Toplam Öğrenci" style="-fx-text-fill: white; -fx-font-size: 14px;"/>
+                            </VBox>
+                            
+                            <!-- Total Questions -->
+                            <VBox alignment="CENTER" spacing="10" style="-fx-background-color: #2ecc71; -fx-background-radius: 10; -fx-padding: 20; -fx-min-width: 180;">
+                                <Label text="❓" style="-fx-font-size: 30px;"/>
+                                <Label fx:id="totalQuestionsLabel" text="0" style="-fx-text-fill: white; -fx-font-size: 28px; -fx-font-weight: bold;"/>
+                                <Label text="Toplam Soru" style="-fx-text-fill: white; -fx-font-size: 14px;"/>
+                            </VBox>
+                            
+                            <!-- Total Exams -->
+                            <VBox alignment="CENTER" spacing="10" style="-fx-background-color: #9b59b6; -fx-background-radius: 10; -fx-padding: 20; -fx-min-width: 180;">
+                                <Label text="📝" style="-fx-font-size: 30px;"/>
+                                <Label fx:id="totalExamsLabel" text="0" style="-fx-text-fill: white; -fx-font-size: 28px; -fx-font-weight: bold;"/>
+                                <Label text="Toplam Sınav" style="-fx-text-fill: white; -fx-font-size: 14px;"/>
+                            </VBox>
+                            
+                            <!-- Completed Exams -->
+                            <VBox alignment="CENTER" spacing="10" style="-fx-background-color: #e67e22; -fx-background-radius: 10; -fx-padding: 20; -fx-min-width: 180;">
+                                <Label text="✅" style="-fx-font-size: 30px;"/>
+                                <Label fx:id="completedExamsLabel" text="0" style="-fx-text-fill: white; -fx-font-size: 28px; -fx-font-weight: bold;"/>
+                                <Label text="Tamamlanan Sınav" style="-fx-text-fill: white; -fx-font-size: 14px;"/>
+                            </VBox>
+                        </HBox>
+                        
+                        <Separator/>
+                        
+                        <!-- Quick Actions -->
+                        <Label text="⚡ Hızlı İşlemler" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                        <HBox spacing="15" alignment="CENTER">
+                            <Button text="➕ Yeni Soru Ekle" onAction="#openQuestionManagement" 
+                                    style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 15 25; -fx-cursor: hand;"/>
+                            <Button text="📝 Yeni Sınav Oluştur" onAction="#openExamManagement"
+                                    style="-fx-background-color: #8e44ad; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 15 25; -fx-cursor: hand;"/>
+                            <Button text="👤 Öğrenci Ekle" onAction="#openStudentManagement"
+                                    style="-fx-background-color: #2980b9; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 15 25; -fx-cursor: hand;"/>
+                            <Button text="📊 Raporları Görüntüle" onAction="#openReports"
+                                    style="-fx-background-color: #d35400; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 15 25; -fx-cursor: hand;"/>
+                        </HBox>
+                        
+                        <Separator/>
+                        
+                        <!-- System Info -->
+                        <Label text="ℹ️ Sistem Bilgisi" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                        <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20;">
+                            <Label fx:id="systemInfoLabel" text="Sistem: Ehliyet Sınav Sistemi v1.0" style="-fx-font-size: 14px;"/>
+                            <Label fx:id="dbStatusLabel" text="Veritabanı Durumu: Bağlı ✅" style="-fx-font-size: 14px;"/>
+                            <Label fx:id="lastUpdateLabel" text="Son Güncelleme: -" style="-fx-font-size: 14px;"/>
+                        </VBox>
+                    </VBox>
+                </ScrollPane>
+            </Tab>
+            
+            <!-- Question Management Tab -->
+            <Tab text="❓ Soru Yönetimi" fx:id="questionTab">
+                <fx:include fx:id="questionManagement" source="question_management.fxml"/>
+            </Tab>
+            
+            <!-- Exam Management Tab -->
+            <Tab text="📝 Sınav Yönetimi" fx:id="examTab">
+                <fx:include fx:id="examManagement" source="exam_management.fxml"/>
+            </Tab>
+            
+            <!-- Student Management Tab -->
+            <Tab text="👥 Öğrenci Yönetimi" fx:id="studentTab">
+                <VBox spacing="20" style="-fx-padding: 20;">
+                    <HBox alignment="CENTER_LEFT" spacing="20">
+                        <Label text="👥 Öğrenci Yönetimi" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="➕ Yeni Öğrenci Ekle" onAction="#showAddStudentDialog"
+                                style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 13px; -fx-cursor: hand;"/>
+                    </HBox>
+                    <Separator/>
+                    
+                    <!-- Search and Filter -->
+                    <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-background-color: #ecf0f1; -fx-background-radius: 5; -fx-padding: 15;">
+                        <Label text="Ara:" style="-fx-font-weight: bold;"/>
+                        <TextField fx:id="studentSearchField" promptText="🔍 İsim veya öğrenci no ara..." prefWidth="300"/>
+                        <Button text="🔄 Yenile" onAction="#refreshStudents" style="-fx-cursor: hand;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="studentCountLabel" text="Toplam: 0 öğrenci"/>
+                    </HBox>
+                    
+                    <!-- Students Table -->
+                    <TableView fx:id="studentsTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="studentIdCol" text="ID" prefWidth="50"/>
+                            <TableColumn fx:id="studentNoCol" text="Öğrenci No" prefWidth="120"/>
+                            <TableColumn fx:id="studentNameCol" text="Ad Soyad" prefWidth="200"/>
+                            <TableColumn fx:id="studentTcCol" text="TC No" prefWidth="120"/>
+                            <TableColumn fx:id="studentEmailCol" text="E-posta" prefWidth="200"/>
+                            <TableColumn fx:id="studentPhoneCol" text="Telefon" prefWidth="120"/>
+                            <TableColumn fx:id="studentStatusCol" text="Durum" prefWidth="100"/>
+                            <TableColumn fx:id="studentActionsCol" text="İşlemler" prefWidth="180"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
+            
+            <!-- Reports Tab -->
+            <Tab text="📊 Raporlar" fx:id="reportsTab">
+                <VBox spacing="20" style="-fx-padding: 20;">
+                    <Label text="📊 Sınav Raporları" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+                    <Separator/>
+                    
+                    <!-- Report Cards -->
+                    <HBox spacing="20" alignment="CENTER">
+                        <VBox alignment="CENTER" spacing="15" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 30; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+                            <Label text="📈" style="-fx-font-size: 40px;"/>
+                            <Label text="Sınav Sonuçları" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                            <Label text="Tüm sınav sonuçlarını görüntüleyin" style="-fx-text-fill: #666;"/>
+                            <Button text="Raporu Aç" onAction="#showExamResultsReport" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-cursor: hand;"/>
+                        </VBox>
+                        
+                        <VBox alignment="CENTER" spacing="15" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 30; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+                            <Label text="👥" style="-fx-font-size: 40px;"/>
+                            <Label text="Öğrenci Performansı" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                            <Label text="Öğrenci bazlı başarı analizi" style="-fx-text-fill: #666;"/>
+                            <Button text="Raporu Aç" onAction="#showStudentPerformanceReport" style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-cursor: hand;"/>
+                        </VBox>
+                        
+                        <VBox alignment="CENTER" spacing="15" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 30; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+                            <Label text="❓" style="-fx-font-size: 40px;"/>
+                            <Label text="Soru Analizi" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                            <Label text="En çok yanlış yapılan sorular" style="-fx-text-fill: #666;"/>
+                            <Button text="Raporu Aç" onAction="#showQuestionAnalysisReport" style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-cursor: hand;"/>
+                        </VBox>
+                    </HBox>
+                    
+                    <Separator/>
+                    
+                    <!-- Recent Results Table -->
+                    <Label text="📋 Son Sınav Sonuçları" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                    <TableView fx:id="recentResultsTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="resultDateCol" text="Tarih" prefWidth="150"/>
+                            <TableColumn fx:id="resultStudentCol" text="Öğrenci" prefWidth="200"/>
+                            <TableColumn fx:id="resultExamCol" text="Sınav" prefWidth="200"/>
+                            <TableColumn fx:id="resultScoreCol" text="Puan" prefWidth="100"/>
+                            <TableColumn fx:id="resultStatusCol" text="Durum" prefWidth="100"/>
+                            <TableColumn fx:id="resultActionsCol" text="Detay" prefWidth="120"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
+            
+        </TabPane>
     </center>
 
 </BorderPane>

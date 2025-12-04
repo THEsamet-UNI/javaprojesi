@@ -139,7 +139,7 @@ public class QuestionDAO {
      * Tüm aktif soruları getirir
      */
     public List<Question> getAllQuestions() {
-        return getQuestions("SELECT * FROM questions WHERE is_active=TRUE ORDER BY created_date DESC");
+        return getQuestions("SELECT * FROM questions WHERE is_active=TRUE ORDER BY created_at DESC");
     }
 
     /**
@@ -297,7 +297,7 @@ public class QuestionDAO {
         question.setPoints(rs.getInt("points"));
         question.setCreatedBy(rs.getInt("created_by"));
 
-        Timestamp createdTimestamp = rs.getTimestamp("created_date");
+        Timestamp createdTimestamp = rs.getTimestamp("created_at");
         if (createdTimestamp != null) {
             question.setCreatedDate(createdTimestamp.toLocalDateTime());
         }
