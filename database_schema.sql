@@ -46,19 +46,21 @@ CREATE TABLE IF NOT EXISTS categories (
 
 -- ============================================
 -- 3. QUESTIONS TABLE (Sınav Soruları)
+-- NOT: category ve difficulty alanları, mevcut kod uyumluluğu için eklenmiştir.
+-- Gelecekte bu alanlar kaldırılarak category_id ve difficulty_level kullanılmalıdır.
 -- ============================================
 CREATE TABLE IF NOT EXISTS questions (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    category_id INT,
-    category VARCHAR(50),
+    category_id INT,                    -- Foreign key to categories table
+    category VARCHAR(50),               -- Legacy: Text category for code compatibility
     question_text TEXT NOT NULL,
     option_a VARCHAR(255) NOT NULL,
     option_b VARCHAR(255) NOT NULL,
     option_c VARCHAR(255) NOT NULL,
     option_d VARCHAR(255) NOT NULL,
     correct_answer ENUM('A', 'B', 'C', 'D') NOT NULL,
-    difficulty_level ENUM('easy', 'medium', 'hard') DEFAULT 'medium',
-    difficulty VARCHAR(20) DEFAULT 'orta',
+    difficulty_level ENUM('easy', 'medium', 'hard') DEFAULT 'medium',  -- Standard difficulty
+    difficulty VARCHAR(20) DEFAULT 'orta',  -- Legacy: Turkish difficulty for code compatibility
     points INT DEFAULT 1,
     image_path VARCHAR(255),
     explanation TEXT,
