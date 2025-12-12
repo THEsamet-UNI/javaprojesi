@@ -222,7 +222,7 @@ public class ExamDAO {
      * Tüm aktif sınavları getirir
      */
     public List<Exam> getAllActiveExams() {
-        String sql = "SELECT * FROM exams WHERE is_active=TRUE ORDER BY created_date DESC";
+        String sql = "SELECT * FROM exams WHERE is_active=TRUE ORDER BY created_at DESC";
         return getExams(sql);
     }
 
@@ -233,7 +233,7 @@ public class ExamDAO {
         String sql = "SELECT * FROM exams WHERE is_active=TRUE " +
                 "AND (start_date IS NULL OR start_date <= NOW()) " +
                 "AND (end_date IS NULL OR end_date >= NOW()) " +
-                "ORDER BY created_date DESC";
+                "ORDER BY created_at DESC";
         return getExams(sql);
     }
 
@@ -272,7 +272,7 @@ public class ExamDAO {
         exam.setPassingScore(rs.getInt("passing_score"));
         exam.setCreatedBy(rs.getInt("created_by"));
 
-        Timestamp createdTimestamp = rs.getTimestamp("created_date");
+        Timestamp createdTimestamp = rs.getTimestamp("created_at");
         if (createdTimestamp != null) {
             exam.setCreatedDate(createdTimestamp.toLocalDateTime());
         }

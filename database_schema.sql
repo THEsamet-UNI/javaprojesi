@@ -46,17 +46,21 @@ CREATE TABLE IF NOT EXISTS categories (
 
 -- ============================================
 -- 3. QUESTIONS TABLE (Sınav Soruları)
+-- NOT: category ve difficulty alanları, mevcut kod uyumluluğu için eklenmiştir.
+-- Gelecekte bu alanlar kaldırılarak category_id ve difficulty_level kullanılmalıdır.
 -- ============================================
 CREATE TABLE IF NOT EXISTS questions (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    category_id INT NOT NULL,
+    category_id INT,                    -- Foreign key to categories table
+    category VARCHAR(50),               -- Legacy: Text category for code compatibility
     question_text TEXT NOT NULL,
     option_a VARCHAR(255) NOT NULL,
     option_b VARCHAR(255) NOT NULL,
     option_c VARCHAR(255) NOT NULL,
     option_d VARCHAR(255) NOT NULL,
     correct_answer ENUM('A', 'B', 'C', 'D') NOT NULL,
-    difficulty_level ENUM('easy', 'medium', 'hard') DEFAULT 'medium',
+    difficulty_level ENUM('easy', 'medium', 'hard') DEFAULT 'medium',  -- Standard difficulty
+    difficulty VARCHAR(20) DEFAULT 'orta',  -- Legacy: Turkish difficulty for code compatibility
     points INT DEFAULT 1,
     image_path VARCHAR(255),
     explanation TEXT,
@@ -64,7 +68,7 @@ CREATE TABLE IF NOT EXISTS questions (
     created_by INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE,
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL,
     FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL,
     INDEX idx_category (category_id),
     INDEX idx_difficulty (difficulty_level),
@@ -185,15 +189,15 @@ INSERT INTO categories (name, description) VALUES
 ON DUPLICATE KEY UPDATE name=name;
 
 -- Örnek sorular ekleme
-INSERT INTO questions (category_id, question_text, option_a, option_b, option_c, option_d, correct_answer, difficulty_level, points, explanation) VALUES
-(1, 'Şehir içi yollarda azami hız sınırı kaç km/saat\'tir?', '30', '50', '70', '90', 'B', 'easy', 1, 'Şehir içinde azami hız 50 km/saat olarak belirlenmiştir.'),
-(1, 'Aşağıdakilerden hangisi sürücü belgesine el konulmasını gerektirir?', 'Hız sınırını aşmak', 'Alkollü araç kullanmak', 'Kırmızı ışıkta geçmek', 'Emniyet kemeri takmamak', 'B', 'medium', 1, 'Alkollü araç kullanmak sürücü belgesine el konulmasını gerektiren bir durumdur.'),
-(2, 'Motor yağı hangi amaçla kullanılır?', 'Soğutmak için', 'Yağlamak için', 'Temizlemek için', 'Hepsı', 'D', 'easy', 1, 'Motor yağı, motoru yağlar, soğutur ve temizler.'),
-(2, 'Araçta ABS sisteminin görevi nedir?', 'Hızı artırır', 'Yakıt tasarrufu sağlar', 'Fren sırasında tekerleklerin kilitlenmesini önler', 'Motoru korur', 'C', 'medium', 1, 'ABS (Anti-lock Braking System), fren yaparken tekerleklerin kilitlenmesini önler.'),
-(3, 'Trafik kazasında yaralıya ilk yapılması gereken nedir?', 'Su vermek', 'Olay yerini güvenli hale getirmek', 'Hastaneye götürmek', 'Yaralıyı kaldırmak', 'B', 'hard', 1, 'İlk olarak olay yeri güvenli hale getirilmeli, ardından yaralıya müdahale edilmelidir.'),
-(3, 'Bilinçsiz bir yaralıya ne yapılmalıdır?', 'Hemen su içirilmeli', 'Havayolu açıklığı kontrol edilmeli', 'Ayağa kaldırılmalı', 'Hiçbir şey yapılmamalı', 'B', 'medium', 1, 'Bilinçsiz yaralıda önce havayolu açıklığı kontrol edilmelidir.'),
-(4, 'Aşağıdakilerden hangisi savunma sürücülüğü prensiplerindendir?', 'Hızlı gitmek', 'Dikkatli ve öngörülü olmak', 'Son anda fren yapmak', 'Sürekli korna çalmak', 'B', 'easy', 1, 'Savunma sürücülüğünde dikkatli ve öngörülü olmak en önemli prensiptir.'),
-(4, 'Yolcu taşırken en önemli öncelik nedir?', 'Hız', 'Konfor', 'Güvenlik', 'Zaman', 'C', 'easy', 1, 'Yolcu taşımada en önemli öncelik her zaman güvenliktir.')
+INSERT INTO questions (category_id, category, question_text, option_a, option_b, option_c, option_d, correct_answer, difficulty_level, difficulty, points, explanation) VALUES
+(1, 'trafik_kuralları', 'Şehir içi yollarda azami hız sınırı kaç km/saat\'tir?', '30', '50', '70', '90', 'B', 'easy', 'kolay', 1, 'Şehir içinde azami hız 50 km/saat olarak belirlenmiştir.'),
+(1, 'trafik_kuralları', 'Aşağıdakilerden hangisi sürücü belgesine el konulmasını gerektirir?', 'Hız sınırını aşmak', 'Alkollü araç kullanmak', 'Kırmızı ışıkta geçmek', 'Emniyet kemeri takmamak', 'B', 'medium', 'orta', 1, 'Alkollü araç kullanmak sürücü belgesine el konulmasını gerektiren bir durumdur.'),
+(2, 'motor', 'Motor yağı hangi amaçla kullanılır?', 'Soğutmak için', 'Yağlamak için', 'Temizlemek için', 'Hepsı', 'D', 'easy', 'kolay', 1, 'Motor yağı, motoru yağlar, soğutur ve temizler.'),
+(2, 'motor', 'Araçta ABS sisteminin görevi nedir?', 'Hızı artırır', 'Yakıt tasarrufu sağlar', 'Fren sırasında tekerleklerin kilitlenmesini önler', 'Motoru korur', 'C', 'medium', 'orta', 1, 'ABS (Anti-lock Braking System), fren yaparken tekerleklerin kilitlenmesini önler.'),
+(3, 'ilkyardım', 'Trafik kazasında yaralıya ilk yapılması gereken nedir?', 'Su vermek', 'Olay yerini güvenli hale getirmek', 'Hastaneye götürmek', 'Yaralıyı kaldırmak', 'B', 'hard', 'zor', 1, 'İlk olarak olay yeri güvenli hale getirilmeli, ardından yaralıya müdahale edilmelidir.'),
+(3, 'ilkyardım', 'Bilinçsiz bir yaralıya ne yapılmalıdır?', 'Hemen su içirilmeli', 'Havayolu açıklığı kontrol edilmeli', 'Ayağa kaldırılmalı', 'Hiçbir şey yapılmamalı', 'B', 'medium', 'orta', 1, 'Bilinçsiz yaralıda önce havayolu açıklığı kontrol edilmelidir.'),
+(4, 'işaretler', 'Aşağıdakilerden hangisi savunma sürücülüğü prensiplerindendir?', 'Hızlı gitmek', 'Dikkatli ve öngörülü olmak', 'Son anda fren yapmak', 'Sürekli korna çalmak', 'B', 'easy', 'kolay', 1, 'Savunma sürücülüğünde dikkatli ve öngörülü olmak en önemli prensiptir.'),
+(4, 'işaretler', 'Yolcu taşırken en önemli öncelik nedir?', 'Hız', 'Konfor', 'Güvenlik', 'Zaman', 'C', 'easy', 'kolay', 1, 'Yolcu taşımada en önemli öncelik her zaman güvenliktir.')
 ON DUPLICATE KEY UPDATE question_text=question_text;
 
 -- Örnek sınav oluşturma
